@@ -4,5 +4,9 @@
     <string name="bodyText">Напишите что-нибудь</string>
     <string name="send">Отправить статью</string>
     <string name="search">Search</string>
+    <string name="log_in">ВОЙТИ</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="register">ЗАРЕГИСТРИРОВАТЬСЯ</string>
 
 </resources>
