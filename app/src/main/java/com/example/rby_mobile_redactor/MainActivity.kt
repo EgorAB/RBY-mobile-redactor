@@ -12,8 +12,9 @@ import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.graphics.drawable.ColorDrawable
-
-
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,7 +33,8 @@ class MainActivity : AppCompatActivity() {
 //                    .setAction("Action", null).show()
             }
         }
-        // val abs: SearchView = findViewById(R.id.app_bar_search) // настроить
+        left_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item,
+            arrayOf("Sample1", "Sample2", "Sample3", "Sample 4"))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
