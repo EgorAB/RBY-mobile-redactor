@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_article_choose.*
@@ -19,7 +20,7 @@ class ArticleChooseActivity : AppCompatActivity() {
 
         val logInLayout = LayoutInflater.from(this).inflate(R.layout.log_in, null)
         titleLayout.addView(logInLayout)
-        logIn.setOnClickListener {
+        logInLayout.findViewById<Button>(R.id.logIn).setOnClickListener {
             if (loginField.text.toString() != "" && password.text.toString() != "") {
             }
         }

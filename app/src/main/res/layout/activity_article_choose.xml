@@ -8,6 +8,8 @@
         android:background="@color/backgroundColor"
         tools:context=".ArticleChooseActivity">
 
+
+
     <LinearLayout android:layout_width="match_parent"
                   android:id="@+id/titleLayout"
                   android:orientation="vertical"
@@ -22,7 +24,7 @@
             android:layout_margin="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:foregroundGravity="bottom"
+            android:layout_gravity="center_horizontal|bottom"
             app:srcCompat="@drawable/ic_add_black_24dp" app:backgroundTint="#EFB815"/>
 
 </android.support.design.widget.CoordinatorLayout>
