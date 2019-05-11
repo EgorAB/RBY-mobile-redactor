@@ -5,6 +5,7 @@
     <color name="colorAccent">#000000</color>
     <color name="backgroundColor">#EFEFEF</color>
     <color name="tintColor">#000000</color>
+    <color name="white">#FFFFFF</color>
     <color name="titleColor">#000000</color>
     <color name="editTextColor">#EFB815</color>
 </resources>
