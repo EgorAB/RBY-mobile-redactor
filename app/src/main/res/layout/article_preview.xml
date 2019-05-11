@@ -4,15 +4,14 @@
                                              xmlns:tools="http://schemas.android.com/tools"
                                              android:orientation="horizontal"
                                              android:layout_width="match_parent"
-                                             android:background=""
-                                             android:layout_height="64dp">
+                                             android:background="@color/white"
+                                             android:layout_height="72dp">
 
-    <TextView android:text="Okey"
-              android:textSize="22sp"
+    <TextView android:textSize="22sp"
               android:textColor="@color/colorPrimaryDark"
               android:layout_gravity="center_vertical"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content" android:id="@+id/textView"
+              android:layout_height="wrap_content" android:id="@+id/title"
               android:layout_marginBottom="8dp"
               app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="8dp"
               app:layout_constraintTop_toTopOf="parent" android:layout_marginStart="8dp"
@@ -22,11 +21,12 @@
                  style="@style/ArticleButton" app:layout_constraintEnd_toEndOf="parent"
                  android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
                  app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
-                 app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/imageButton"/>
+                 app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/edit"/>
 
     <ImageButton style="@style/ArticleButton" android:background="@drawable/ic_cloud_queue_black_24dp"
                  app:layout_constraintBottom_toBottomOf="parent"
-                 app:layout_constraintEnd_toStartOf="@+id/imageButton" android:layout_marginBottom="8dp"
+                 android:id="@+id/cloud"
+                 app:layout_constraintEnd_toStartOf="@+id/edit" android:layout_marginBottom="8dp"
                  android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
                  android:layout_marginEnd="16dp"/>
 
