@@ -24,12 +24,15 @@
 
         <Button android:layout_width="198dp" android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:clickable="true"
                 android:text="@string/register"
                 android:id="@+id/register"
-                android:background="@drawable/button"/>
+                android:background="@drawable/button" android:focusable="true"/>
 
         <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_margin="8dp"
+                android:clickable="true"
+                android:focusable="true"
                 android:text="@string/log_in"
                 android:id="@+id/logIn"
                 android:background="@drawable/button"/>

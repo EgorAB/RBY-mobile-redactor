@@ -22,7 +22,7 @@
             android:layout_margin="16dp"
             android:clickable="true"
             android:focusable="true"
-            android:layout_gravity="bottom"
+            android:foregroundGravity="bottom"
             app:srcCompat="@drawable/ic_add_black_24dp" app:backgroundTint="#EFB815"/>
 
 </android.support.design.widget.CoordinatorLayout>
