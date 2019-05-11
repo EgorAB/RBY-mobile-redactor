@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity() {
 //                    .setAction("Action", null).show()
             }
         }
-        left_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item,
-            arrayOf("Sample1", "Sample2", "Sample3", "Sample 4"))
+//        left_drawer.adapter = ArrayAdapter(this, R.layout.drawer_list_item,
+//            arrayOf("Аккаунт", "Мои статьи", "Настройки", "Выйти"))
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
