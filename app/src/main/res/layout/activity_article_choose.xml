@@ -12,6 +12,7 @@
         tools:context=".ArticleChooseActivity">
 
     <ImageButton android:layout_width="match_parent" android:layout_height="72dp"
+                 android:id="@+id/articleCreateButton"
                  android:layout_margin="16dp" android:background="@drawable/new_article_button"/>
 
 </LinearLayout>

@@ -17,11 +17,11 @@ class ArticleChooseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_article_choose)
 
-        supportActionBar!!.displayOptions =
+        supportActionBar?.displayOptions =
             ActionBar.DISPLAY_SHOW_HOME or ActionBar.DISPLAY_SHOW_TITLE or ActionBar.DISPLAY_HOME_AS_UP or ActionBar.DISPLAY_USE_LOGO
-        actionBar!!.setIcon(R.drawable.ic_r)
+        actionBar?.setIcon(R.drawable.ic_r)
 
-        titleLayout.setOnClickListener { createArticle() }
+        articleCreateButton.setOnClickListener { createArticle() }
 
         fillTitles()
     }
