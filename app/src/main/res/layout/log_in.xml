@@ -8,7 +8,7 @@
               android:backgroundTint="@color/colorPrimaryDark"
               android:inputType="text"
               android:layout_margin="8dp"
-              android:hint="@string/login" android:id="@+id/loginField"/>
+              android:hint="@string/login" android:id="@+id/login"/>
 
     <EditText android:layout_width="match_parent" android:layout_height="wrap_content"
               android:layout_margin="8dp"

@@ -3,12 +3,16 @@ package com.example.rby_mobile_redactor
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import kotlinx.android.synthetic.main.activity_article_choose.*
-import kotlinx.android.synthetic.main.log_in.*
 import org.json.JSONObject
 import java.io.File
 
@@ -21,7 +25,10 @@ class ArticleChooseActivity : AppCompatActivity() {
         val logInLayout = LayoutInflater.from(this).inflate(R.layout.log_in, null)
         titleLayout.addView(logInLayout)
         logInLayout.findViewById<Button>(R.id.logIn).setOnClickListener {
-            if (loginField.text.toString() != "" && password.text.toString() != "") {
+            login = logInLayout.findViewById<EditText>(R.id.login).text.toString()
+            val password = logInLayout.findViewById<EditText>(R.id.password).text.toString()
+            if (login != "" && password != "") {
+                logIn(login, password)
             }
         }
 
@@ -30,12 +37,30 @@ class ArticleChooseActivity : AppCompatActivity() {
         newArticle.setOnClickListener { createArticle() }
     }
 
-    private var login = false
+    private var login = ""
 
     private val articlesPath = "articles.json"
 
     private fun logIn(login: String, password: String) {
-
+        val queue = Volley.newRequestQueue(this)
+        queue.add(JsonObjectRequest(
+            Request.Method.POST,
+            "172.20.20.158:80",
+            JSONObject(mapOf(
+                "purpose" to "create_user",
+                "content" to JSONObject(mapOf(
+                    "login" to login,
+                    "password" to password
+                ))
+            )),
+            { response ->
+                Log.d("RESPONSE", response.toString())
+                //if (response.getString("u_r_created") == "ok")
+            },
+            { error ->
+                Log.d("ERROR", error.toString())
+            }
+        ))
     }
 
     private fun fillTitles() {
