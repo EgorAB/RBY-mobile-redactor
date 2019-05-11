@@ -1,6 +1,7 @@
 package com.example.rby_mobile_redactor
 
 import android.content.Intent
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
@@ -10,6 +11,9 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
+import android.graphics.drawable.ColorDrawable
+
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,8 +28,8 @@ class MainActivity : AppCompatActivity() {
                     setPositiveButton("Текст") { _, _ -> {} }
                     setNegativeButton("Картинка") { _, _ -> {} }
                 }.create().show()
-                Snackbar.make(view, "Элемент добавлен (нет)", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+//                Snackbar.make(view, "Элемент добавлен (нет)", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show()
             }
         }
         // val abs: SearchView = findViewById(R.id.app_bar_search) // настроить
@@ -40,8 +44,8 @@ class MainActivity : AppCompatActivity() {
         when (item?.itemId) {
             R.id.send -> {
             }
-            R.id.app_bar_search -> {
-            }
+//            R.id.app_bar_search -> {
+//            }
         }
         return super.onOptionsItemSelected(item)
     }
