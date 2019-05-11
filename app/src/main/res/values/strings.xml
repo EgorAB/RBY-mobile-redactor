@@ -2,6 +2,7 @@
     <string name="app_name">RbY Mobile Redactor</string>
     <string name="headlineText">Тут может быть ваш заголовок</string>
     <string name="bodyText">Напишите что-нибудь</string>
-    <string name="endButton">Отправить статью</string>
+    <string name="send">Отправить статью</string>
+    <string name="search">Search</string>
 
 </resources>
