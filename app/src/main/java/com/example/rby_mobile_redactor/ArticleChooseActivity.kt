@@ -2,6 +2,7 @@ package com.example.rby_mobile_redactor
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
@@ -79,6 +80,7 @@ class ArticleChooseActivity : AppCompatActivity() {
     }
 
     private fun updateTitles() {
+        assert(login != "")
         val queue = Volley.newRequestQueue(this)
         queue.add(JsonObjectRequest(
             Request.Method.POST,
@@ -95,6 +97,14 @@ class ArticleChooseActivity : AppCompatActivity() {
             ),
             { response ->
                 Log.d("RESPONSE", response.toString())
+                if (response.has(login)) {
+                    val articles = response.getJSONObject(login).getJSONObject("articles")
+                    for (key in articles.keys()) {
+                        File("$articlesPath/$key").outputStream().use { output ->
+                            output.write(articles.getJSONObject(key).toString().toByteArray())
+                        }
+                    }
+                }
             },
             { error ->
                 Log.d("ERROR", error.toString())
@@ -109,7 +119,9 @@ class ArticleChooseActivity : AppCompatActivity() {
                     val article = JSONObject(String(input.readBytes()))
                     val articlePreview =
                         LayoutInflater.from(this).inflate(R.layout.article_preview, null) as LinearLayout
-                    articlePreview.findViewById<TextView>(R.id.title).text = article.getString("title")
+                    articlePreview.findViewById<TextView>(R.id.title).text = article.getString("title").let {
+                        if (it != "") it else file.name
+                    }
                     titleLayout.addView(articlePreview)
                 }
             }
@@ -119,7 +131,7 @@ class ArticleChooseActivity : AppCompatActivity() {
     private fun createArticle() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("login", login)
-        intent.putExtra("path", "$articlesPath/${File(articlesPath).listFiles()?.let { it.size } ?: 0}")
+        intent.putExtra("path", "$articlesPath/${File(articlesPath).listFiles()?.size ?: 0}")
         startActivity(intent)
     }
 
@@ -147,6 +159,14 @@ class ArticleChooseActivity : AppCompatActivity() {
             ),
             { response ->
                 Log.d("RESPONSE", response.toString())
+                if (response.getString("result") != "ok") {
+                    AlertDialog.Builder(this).run {
+                        setMessage("Загрузка данных на сервер не удалась")
+                        setPositiveButton("Попробовать ещё") { dialog, which ->
+
+                        }
+                    }
+                }
             },
             { error ->
                 Log.d("ERROR", error.toString())
