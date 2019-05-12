@@ -162,7 +162,7 @@ class ArticleChooseActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("login", login)
         if (id == null) {
-            File("$id.json").createNewFile()
+            File("${(File(articlesPath).listFiles()?.size ?: 0)}.json").createNewFile()
         }
         intent.putExtra("path", "$articlesPath/${id ?: (File(articlesPath).listFiles()?.size ?: 0)}")
         startActivity(intent)
