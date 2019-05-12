@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //загрузка
-        //load(intent.getStringExtra("path"))
+        load(intent.getStringExtra("path"))
 
         fab.setOnClickListener { view ->
             run {
