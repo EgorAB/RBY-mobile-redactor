@@ -26,10 +26,11 @@ class ArticleChooseActivity : AppCompatActivity() {
         val logInLayout = LayoutInflater.from(this).inflate(R.layout.log_in, null)
         titleLayout.addView(logInLayout)
         logInLayout.findViewById<Button>(R.id.logIn).setOnClickListener {
-            login = logInLayout.findViewById<EditText>(R.id.login).text.toString()
+            val newLogin = logInLayout.findViewById<EditText>(R.id.login).text.toString()
             val password = logInLayout.findViewById<EditText>(R.id.password).text.toString()
-            if (login != "" && password != "") {
-                logIn(login, password)
+            if (newLogin != "" && password != "") {
+                logIn(newLogin, password)
+                login = newLogin
             } else {
                 Toast.makeText(this, "Введите логин и пароль", Toast.LENGTH_LONG).show()
             }
@@ -38,7 +39,7 @@ class ArticleChooseActivity : AppCompatActivity() {
         fillTitles()
 
         newArticle.setOnClickListener {
-            createArticle()
+            editArticle(null)
         }
     }
 
@@ -66,11 +67,10 @@ class ArticleChooseActivity : AppCompatActivity() {
             { response ->
                 Log.d("RESPONSE", response.toString())
                 if (response.getString("u_r_created") == "ok") {
-                    uploadAll(queue)
+                    upload(queue)
                     updateTitles()
                     titleLayout.removeAllViews()
                     titleLayout.addView(LayoutInflater.from(this).inflate(R.layout.account, null))
-                    fillTitles()
                 }
             },
             { error ->
@@ -99,11 +99,14 @@ class ArticleChooseActivity : AppCompatActivity() {
                 Log.d("RESPONSE", response.toString())
                 if (response.has(login)) {
                     val articles = response.getJSONObject(login).getJSONObject("articles")
+                    val synchronized = ArrayList<String>()
                     for (key in articles.keys()) {
                         File("$articlesPath/$key").outputStream().use { output ->
                             output.write(articles.getJSONObject(key).toString().toByteArray())
                         }
+                        synchronized.add(key)
                     }
+                    fillTitles(synchronized)
                 }
             },
             { error ->
@@ -112,7 +115,7 @@ class ArticleChooseActivity : AppCompatActivity() {
         ))
     }
 
-    private fun fillTitles() {
+    private fun fillTitles(synchronized: ArrayList<String> = arrayListOf()) {
         if (File(articlesPath).listFiles() != null) {
             for (file in File(articlesPath).listFiles()) {
                 openFileInput(articlesPath).use { input ->
@@ -122,20 +125,47 @@ class ArticleChooseActivity : AppCompatActivity() {
                     articlePreview.findViewById<TextView>(R.id.title).text = article.getString("title").let {
                         if (it != "") it else file.name
                     }
-                    titleLayout.addView(articlePreview)
+                    articlePreview.findViewById<ImageButton>(R.id.edit).setOnClickListener {
+                        editArticle(file.name)
+                    }
+                    articlePreview.findViewById<ImageButton>(R.id.cloud).run {
+                        if (synchronized == null || file.name in synchronized) {
+                            markSynchronized()
+                        } else {
+                            setOnClickListener {
+                                if (login == "") {
+                                    Toast.makeText(
+                                        this@ArticleChooseActivity,
+                                        "Чтобы синхронизироваться с облаком, вам необходимо войти",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    upload(Volley.newRequestQueue(this@ArticleChooseActivity), arrayOf(file.name))
+                                    updateTitles()
+                                }
+                            }
+                            titleLayout.addView(articlePreview)
+                        }
+                    }
                 }
             }
         }
     }
 
-    private fun createArticle() {
+    private fun ImageButton.markSynchronized() {
+        setImageDrawable(this@ArticleChooseActivity.resources.getDrawable(R.drawable.ic_cloud_done_black_24dp))
+        isClickable = false
+        isFocusable = false
+    }
+
+    private fun editArticle(id: String?) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("login", login)
-        intent.putExtra("path", "$articlesPath/${File(articlesPath).listFiles()?.size ?: 0}")
+        intent.putExtra("path", "$articlesPath/${id ?: (File(articlesPath).listFiles()?.size ?: 0)}")
         startActivity(intent)
     }
 
-    private fun uploadAll(queue: RequestQueue) {
+    private fun upload(queue: RequestQueue, exact: Array<String>? = null) {
         assert(login != "")
         val files = File(articlesPath).listFiles()
         queue.add(JsonObjectRequest(
@@ -148,8 +178,10 @@ class ArticleChooseActivity : AppCompatActivity() {
                         mapOf(
                             login to JSONObject(
                                 mapOf(
-                                    "articles" to JSONObject(files.map { file ->
+                                    "articles" to JSONObject(if (exact == null) files.map { file ->
                                         file.name to file.inputStream().use { input -> input.read() }
+                                    }.toMap() else Array(exact.size) { i ->
+                                        exact[i] to File("$articlesPath/${exact[i]}").inputStream().use { input -> input.read() }
                                     }.toMap())
                                 )
                             )
