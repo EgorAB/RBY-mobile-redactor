@@ -44,7 +44,7 @@ class ArticleChooseActivity : AppCompatActivity() {
     private var login = ""
 
     private val articlesPath = "/storage/Android/data/com.example.rby_mobile_redactor/saves"
-    private val address = "http://172.20.20.158:8008"
+    private val address = "http://172.20.20.103:8080"
 
     private fun logIn(login: String, password: String) {
         val queue = Volley.newRequestQueue(this)
@@ -68,6 +68,7 @@ class ArticleChooseActivity : AppCompatActivity() {
                     uploadAll(queue)
                     updateTitles()
                     titleLayout.removeAllViews()
+                    titleLayout.addView(LayoutInflater.from(this).inflate(R.layout.account, null))
                     fillTitles()
                 }
             },
@@ -81,10 +82,10 @@ class ArticleChooseActivity : AppCompatActivity() {
         val queue = Volley.newRequestQueue(this)
         queue.add(JsonObjectRequest(
             Request.Method.POST,
-            "http://172.20.20.158:8008",
+            address,
             JSONObject(
                 mapOf(
-                    "purpose" to "get_data",
+                    "purpose" to "get_user",
                     "content" to JSONObject(
                         mapOf(
                             "login" to login
@@ -102,13 +103,15 @@ class ArticleChooseActivity : AppCompatActivity() {
     }
 
     private fun fillTitles() {
-        for (file in File(articlesPath).listFiles()) {
-            openFileInput(articlesPath).use { input ->
-                val article = JSONObject(String(input.readBytes()))
-                val articlePreview =
-                    LayoutInflater.from(this).inflate(R.layout.article_preview, null) as LinearLayout
-                articlePreview.findViewById<TextView>(R.id.title).text = article.getString("title")
-                titleLayout.addView(articlePreview)
+        if (File(articlesPath).listFiles() != null) {
+            for (file in File(articlesPath).listFiles()) {
+                openFileInput(articlesPath).use { input ->
+                    val article = JSONObject(String(input.readBytes()))
+                    val articlePreview =
+                        LayoutInflater.from(this).inflate(R.layout.article_preview, null) as LinearLayout
+                    articlePreview.findViewById<TextView>(R.id.title).text = article.getString("title")
+                    titleLayout.addView(articlePreview)
+                }
             }
         }
     }
@@ -116,7 +119,7 @@ class ArticleChooseActivity : AppCompatActivity() {
     private fun createArticle() {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra("login", login)
-        intent.putExtra("path", "$articlesPath/${File(articlesPath).listFiles().size}")
+        intent.putExtra("path", "$articlesPath/${File(articlesPath).listFiles()?.let { it.size } ?: 0}")
         startActivity(intent)
     }
 

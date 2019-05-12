@@ -6,7 +6,14 @@
     <string name="search">Search</string>
     <string name="log_in">ВОЙТИ</string>
     <string name="login">Логин</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="password">Пароль</string>
     <string name="register">ЗАРЕГИСТРИРОВАТЬСЯ</string>
+    <string name="start_menu_decription">
+        Приветствуем вас в мобильном приложении RusBase Young,
+        созданном специально для создания статей о бизнесе школьниками для школьников.
+    </string>
+    <string name="delete">Delete</string>
 
 </resources>
