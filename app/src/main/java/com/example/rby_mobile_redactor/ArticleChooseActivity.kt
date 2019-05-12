@@ -131,9 +131,13 @@ class ArticleChooseActivity : AppCompatActivity() {
                     "purpose" to "update_articles",
                     "content" to JSONObject(
                         mapOf(
-                            login to JSONObject(files.map { file ->
-                                file.name to file.inputStream().use { input -> input.read() }
-                            }.toMap())
+                            login to JSONObject(
+                                mapOf(
+                                    "articles" to JSONObject(files.map { file ->
+                                        file.name to file.inputStream().use { input -> input.read() }
+                                    }.toMap())
+                                )
+                            )
                         )
                     )
                 )
