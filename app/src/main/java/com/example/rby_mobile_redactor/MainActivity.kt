@@ -15,6 +15,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.SearchView
 import android.support.v7.widget.Toolbar
 import android.graphics.drawable.ColorDrawable
+import android.media.Image
 import android.net.Uri
 import android.os.PersistableBundle
 import android.support.design.widget.AppBarLayout
@@ -25,22 +26,26 @@ import android.text.SpannableStringBuilder
 import android.view.*
 import android.widget.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_start.view.*
 import org.json.JSONArray
 import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
     val pickImage: Int = 108
+    private val imageCellArray = arrayListOf<ImageView>()
+    private val editTextCellArray = arrayListOf<EditText>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         //загрузка
         load(intent.getStringExtra("path"))
-
+        editTextCellArray.add(editText2)
         fab.setOnClickListener { view ->
             run {
                 AlertDialog.Builder(this).run {
                     setTitle("Добавление ячейки")
-                    setPositiveButton("Текст") { _, _ ->
+                    setPositiveButton("Текстовый блок") { _, _ ->
                         run {
                             createTextField()
                         }
@@ -68,13 +73,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun load(savePath: String) {
         //вызываем методы createTextField и createImageField, перед этим распарсив файл сохранения
+
     }
 
     private fun save(savePath: String) {
         //сохраняем все в жсон
+
     }
 
-    private fun parseFile(file: JSONArray) {
+    private fun parseFile(file: JSONArray){
 
     }
 
@@ -89,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<AppBarLayout>(R.id.appBarLayout)?.addView(e)
 //        Snackbar.make(view, "Добавлено текстовое поле", Snackbar.LENGTH_LONG)
 //            .setAction("Action", null).show()
+        editTextCellArray.add(e)
     }
 
     private fun createImageField(bitmap: Bitmap) {
@@ -101,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         )
         i.setImageBitmap(Bitmap.createScaledBitmap(bitmap, appBarLayout.width, (bitmap.height * k).toInt(), true))
         findViewById<AppBarLayout>(R.id.appBarLayout)?.addView(i)
-
+        imageCellArray.add(i)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -135,18 +143,38 @@ class MainActivity : AppCompatActivity() {
         when (item?.itemId) {
             R.id.delete -> {
                 val builder = AlertDialog.Builder(this).run {
-                    setTitle("Удалить элемент?")
-                    setPositiveButton("Да") { _, _ ->
-                        run {
-                        }
-                    }
-                    setNegativeButton("Нет") { _, _ ->
-                        run {
-                        }
-                    }
+                    setTitle("Выберите ячейку для удаления")
+                    setPositiveButton("Ок") { _, _ -> {} }
                 }
-                builder.setView(R.layout.dialog_delete)
-                builder.create().show()
+                val dialogDeleteLayout =
+                    LayoutInflater.from(builder.context).inflate(R.layout.dialog_delete, null) as LinearLayout
+                builder.setView(dialogDeleteLayout)
+                val delete_cell_list = dialogDeleteLayout.findViewById<ListView>(R.id.delete_cell_list)
+                val dialog = builder.create()
+                delete_cell_list.onItemClickListener =
+                    AdapterView.OnItemClickListener { parent, view, position, id ->
+                        AlertDialog.Builder(builder.context).run {
+                            setTitle("Вы уверены что хотите удалить ${(view as TextView).text}?")
+                            setPositiveButton("Да") { _, _ ->
+                                run {
+                                    if (position < editTextCellArray.size) {
+                                        appBarLayout.removeView(editTextCellArray[position])
+                                        editTextCellArray.removeAt(position)
+                                    } else {
+                                        appBarLayout.removeView(imageCellArray[position - editTextCellArray.size])
+                                        imageCellArray.removeAt(position - editTextCellArray.size)
+                                    }
+                                    dialog.dismiss()
+                                }
+                            }
+                            setNegativeButton("Нет") { _, _ -> {} }
+                        }.create().show()
+                    }
+                delete_cell_list.adapter = ArrayAdapter<String>(
+                    builder.context,
+                    android.R.layout.simple_list_item_1, refreshDeleteDialog()
+                )
+                dialog.show()
             }
             R.id.send -> {
                 val builder = AlertDialog.Builder(this).run {
@@ -169,11 +197,24 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
+    private fun refreshDeleteDialog(): ArrayList<String> {
+        val d_s_l_values = arrayListOf<String>()
+        for (i in 1 until editTextCellArray.size + 1) d_s_l_values.add("$i.Текстовый блок")
+        for (i in 1 until imageCellArray.size + 1) d_s_l_values.add("$i.Изображение")
+        return d_s_l_values
+    }
+
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
+    }
+
+    override fun onPause() {
+        save(intent.getStringExtra("path"))
+        super.onPause()
     }
 }
